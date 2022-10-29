@@ -1,60 +1,27 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
-    <div class="carousel-inner">
-      <div class="carousel-item active" data-bs-interval="10000">
-        <img src="https://preview.colorlib.com/theme/cozastore/images/xslide-03.jpg.pagespeed.ic.tP-L47NU9M.webp" class="d-block w-100" alt="...">
-      </div>
-  </div>
+<!-- banner -->
+<img src="https://preview.colorlib.com/theme/cozastore/images/xslide-03.jpg.pagespeed.ic.tP-L47NU9M.webp" class="img-fluid px-5" alt="#">    
 
-<div class="card">
-    <div class="card-body text-center">
-        {% for x in category %}
-        <button class="btn btn-outline-secondary m-3"style="border-radius: 50px;">{{x.category_name}}</button>
-        {% endfor %}
-    </div>
-</div>
-
-<section id="product1" class="section-p1">
-  <h3> Featured Products </h3>
-  <!-- store section -->
-  <div class="pro-container">
+<!-- post -->
+<div class="container d-flex flex-column align-items-center ">
+  <h3 class="text-center pt-3 ">Featured Products</h3>
+  <div class="row">
     {% for x in products %}
-    <div class="pro">
-        {% if x.stock < 1 %}
-        <!-- some js popup -->
-        <a onclick="soldOut()" >
-        {% else %}
-        <a href="{{x.get_url}}">
-        {% endif %}
-        <img src="{{ x.images.url }}"></a>
-        <div class="des">
-            <h5>{{ x.product_name }}</h5>
-            <span>{{x.description}}</span>
-            <div class="star">
-                <i class="fas fa-star"></i>
-            </div>
-            <h4>$ {{x.price}}</h4>
-        </div>
-        {% if x.stock < 1 %}
-        <button type="button" class="btn btn-outline-danger btn-sm">Sold Out</button>
-        {% else %}
-        <a href="{{x.get_url}}" style="position:absolute ;bottom:5%;" class="btn btn-outline-primary btn-sm">
-          <i class="far fa-eye p-1"></i>Details</a>
-        {% endif %}
+    <div class="col">
+      <div class="card m-3" style="width: 13rem; height: auto;border-radius: 30px;">
+          <a href=""> <img src="{{ x.images.url }}" width="auto" class="card-img-top p-3" alt=""></a>
+          <div class="card-body">
+            <h5 class="card-title m-1">{{ x.product_name }}</h5>
+            <p class="card-text m-1">$ {{x.price}}</p>
+            <a href="#" class="btn btn-sm btn-outline-primary">View details</a>
+          </div>
+      </div>
     </div>
     {% endfor %}
   </div>
-</section>
-
-<script>
-  function soldOut() {
-      alert("Sorry this item is not available try again later!");
-}
-</script>
-
-
+</div>
 
 
 

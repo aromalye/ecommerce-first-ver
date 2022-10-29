@@ -94,7 +94,6 @@ def cart(request):
         form = CouponForm(request.POST)
         if form.is_valid():
             coupon_code = form.cleaned_data['code']
-            print(coupon_code)
     else:
         form = CouponForm()
 
@@ -102,16 +101,13 @@ def cart(request):
     status = validate_coupon(coupon_code=coupon_code, user=user)
     if status['valid']:
         coupon = Coupon.objects.get(code=coupon_code)
-        print(coupon)
         coupon.use_coupon(user=user)
 
         discount = coupon.get_discount() # Example: {'value': 50, 'is_percentage': True}
-        print(discount)
         dis_price = discount["value"]
 
 
     cart_item = MyCartItem.objects.filter(user=request.user)
-    print(dis_price)
 
     for x in cart_item:
         x.discount = dis_price

@@ -1,147 +1,68 @@
 {% extends 'base.html' %}
 {% block content %}
+{% load static %}
 
-    <section id="product1" class="section-p1">
-        <!-- search bar -->
+
+<!-- filter products -->
+
+
+
+ <!-- product section -->
+ <div class="container text-center d-flex flex-column align-items-center ">
+    {% if result_count < 1 or si_count < 1 %}
+    <img class="m-3 p-1" src="{% static 'images/no_product_5.png' %}" width="80%">
+    {% else %}
+    <h3 class="text-center pt-3 ">Our Products</h3>
+    <div class="row align-items-center">
         {% if 'keyword' in request.GET %}
-            {% if result_count > 0 %}
-                <p>Summer Collection New Modern Design</p>
-                {% if result_count > 1 %}
-                <p>We Found <strong>{{result_count}}</strong> items</p>
-                {% else %}
-                <p>We Found <strong>{{result_count}}</strong> item</p>
-                {% endif %}
-            <div class="pro-container">
-                {% for x in product %}
-                <div class="pro">
-                    {% if x.stock < 1 %}
-                    <!-- some js popup -->
-                    <a onclick="soldOut()" >
-                    {% else %}
-                    <a href="{{x.get_url}}">
-                    {% endif %}
-                    <img src="{{ x.images.url }}"></a>
-                    <div class="des">
-                        <h5>{{ x.product_name }}</h5>
-                        <span>{{x.description}}</span>
-                        <div class="star">
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <h4>$ {{x.price}}</h4>
-                    </div>
-                    {% if x.stock < 1 %}
-                <button type="button" class="btn btn-outline-danger btn-sm">Sold Out</button>
-                {% else %}
-                <a href="{% url 'add_cart' x.id %}"><i class="fal fa-shopping-cart cart"></i></a>
-                {% endif %}
-                </div>
-                {% endfor %}
-            </div>
+        {% for x in search_products %}
+        <div class="col">
+          <div class="card m-3" style="width: 13rem; height: auto;border-radius: 30px;">
+              <a href="{{ x.get_url }}"> <img src="{{ x.images.url }}" width="auto" class="card-img-top p-3" alt=""></a>
+              <div class="card-body">
+                <h5 class="card-title">{{ x.product_name }}</h5>
+                <p class="card-text m-1">$ {{x.price}}</p>
+                <a href="#" class="btn btn-sm btn-outline-primary">View details</a>
+              </div>
+          </div>
+        </div>
+        {% endfor %}
 
-           <div class="pro-container">
-               {% for x in single_category %}
-            <div class="pro">
-                {% if x.stock < 1 %}
-                <!-- some js popup -->
-                <a onclick="soldOut()" >
-                {% else %}
-                <a href="{{x.get_url}}">
-                {% endif %}
-                <img src="{{ x.images.url }}"></a>
-                <div class="des">
-                    <h5>{{ x.product_name }}</h5>
-                    <span>{{ x.description }}</span>
-                    <div class="star">
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <h4>$ {{ x.price }}</h4>
-                </div>
-                {% if x.stock < 1 %}
-                <button type="button" class="btn btn-outline-danger btn-sm">Sold Out</button>
-                {% else %}
-                <a href="{% url 'add_cart' x.id %}"><i class="fal fa-shopping-cart cart"></i></a>
-                {% endif %}
-            </div>
-               {% endfor %}
-            </div>
-            {% else %}
-            <p>No result found</p>
-            {% endif %}
         {% else %}
 
-        <!-- store section -->
-        {% if product is not None %}
-        <h3>Our Products</h3>
-        {% elif product == 1 %}
-        <h3>Our Product </h3> 
-        {% endif %}
-        
-        <div class="pro-container">
-            {% for x in product %}
-            <div class="pro">
-                {% if x.stock < 1 %}
-                <!-- some js popup -->
-                <a onclick="soldOut()" >
-                {% else %}
-                <a href="{{x.get_url}}">
-                {% endif %}
-                <img src="{{ x.images.url }}"></a>
-                <div class="des">
-                    <h5>{{ x.product_name }}</h5>
-                    <span>{{x.description}}</span>
-                    <div class="star">
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <h4>$ {{x.price}}</h4>
-                </div>
-                {% if x.stock < 1 %}
-                <button type="button" style="position:absolute ;bottom:5%;" class="btn btn-outline-danger btn-sm">Sold Out</button>
-                {% else %}
-                <a href="{{x.get_url}}" style="position:absolute ;bottom:5%;" class="btn btn-outline-primary btn-sm">
-                    <i class="far fa-eye p-1"></i>Details</a>
-                {% endif %}
-            </div>
-            {% endfor %}
+        {% for x in product %}
+        <div class="col">
+          <div class="card m-3" style="width: 13rem; height: auto;border-radius: 30px;">
+              <a href="{{ x.get_url }}"> <img src="{{ x.images.url }}" width="auto" class="card-img-top p-3" alt=""></a>
+              <div class="card-body">
+                <h5 class="card-title">{{ x.product_name }}</h5>
+                <p class="card-text m-1">$ {{x.price}}</p>
+                <a href="#" class="btn btn-sm btn-outline-primary">View details</a>
+              </div>
+          </div>
         </div>
+        {% endfor %}
 
-        <!-- divideded by category section -->
-       <div class="pro-container">
-           {% for x in single_category %}
-        <div class="pro">
-            {% if x.stock < 1 %}
-            <!-- some js popup -->
-            <a onclick="soldOut()" >
-            {% else %}
-            <a href="{{x.get_url}}">
-            {% endif %}
-            <img src="{{ x.images.url }}"></a>
-            <div class="des">
-                <h5>{{ x.product_name }}</h5>
-                <span>{{ x.description }}</span>
-                <div class="star">
-                    <i class="fas fa-star"></i>
-                </div>
-                <h4>$ {{ x.price }}</h4>
-            </div>
-            {% if x.stock < 1 %}
-                <button type="button" class="btn btn-outline-danger btn-sm">Sold Out</button>
-                {% else %}
-                <a href="{% url 'add_cart' x.id %}"><i class="fal fa-shopping-cart cart"></i></a>
-                {% endif %}
+        {% for x in single_category %}
+        <div class="col">
+          <div class="card m-3" style="width: 13rem; height: auto;border-radius: 30px;">
+              <a href="{{ x.product.get_url }}"> <img src="{{ x.images.url }}" width="auto" class="card-img-top p-3" alt=""></a>
+              <div class="card-body">
+                <h5 class="card-title">{{ x.product_name }}</h5>
+                <p class="card-text m-1">$ {{x.price}}</p>
+                <a href="#" class="btn btn-sm btn-outline-primary">View details</a>
+              </div>
+          </div>
         </div>
-           {% endfor %}
-        </div>
-        
-        {% endif %}
-    </section>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endif %}
+ </div>
 
 
-    <script>
-        function soldOut() {
-            alert("Sorry this item is not available try again later!");
-    }
-    </script>
-
+    
+ 
 
 {% endblock %}
 

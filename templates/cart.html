@@ -4,79 +4,81 @@
 {% if not cart_item %}
     <h4> Sorry Your Cart is Empty ! </h4>
 {% else %}
-    <section id="cart" class="section-p1">
-        <table width="100%">
-            <thead>
-                <tr>
-                    <td style="width: 100px;">Image</td>
-                    <td style="width: 250px;">Product</td>
-                    <td style="width: 150px;">Variations</td>
-                    <td style="width: 100px;">Price</td>
-                    <td style="width: 150px;">Quantity</td>
-                    <td>Subtotal</td>
-                    <td>Remove</td>
-                </tr>
-            </thead>
-            <tbody>
+    <div class=" my-3 container text-center ">
+        <div class="table-responsive">
+          <table class="table" style="width: 800px;">
+            <tr>
+                <th style="width: 100px;">Image</th>
+                <th>Product</th>
+                <th>Variations</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
+                <th>Remove</th>
+            </tr>
             {% for x in cart_item %}
-                <tr>
-                    <td><a href="{{ x.product.get_url }}"><img src="{{ x.product.images.url }}" ></a></td>
-                    <td><a href="{{ x.product.get_url }}">{{x.product}}</a></td>
-                    <td style="font-size: small;" >size : {{ x.size }} <br> color : {{ x.color }}</td>
-                    <td>$ {{x.product.price}}</td>
-                    <td>
-                        <a href="{% url 'add_cart' x.product.id x.size x.color %}">
-                            <button type="button" class="btn btn-outline-dark me-3"><i class="fas fa-plus"></i></button></a>
-                         {{x.quantity}}
-                        <a href="{% url 'remove_cart' x.product.id x.size x.color %}">
-                            <button class="btn btn-outline-dark ms-3"><i class="fas fa-minus"></i></button></a>
-                    </td>
-                    <td>$ {{x.sub_total}}</td>
-                    <td><a href="{% url 'delete_cart' x.product.id x.size x.color %}"><button class="btn btn-danger">Remove</button></a></td>
-                </tr>
+            <tr>
+                <td><a href="{{ x.product.get_url }}"><img src="{{ x.product.images.url }}" width="65%"></a></td>
+                <td ><a href="{{ x.product.get_url }}"style="text-decoration:none;color:#2a9d8f;">{{x.product}}</a></td>
+                <td style="font-size: small;" >size : {{ x.size }} <br> color : {{ x.color }}</td>
+                <td>$ {{x.product.price}}</td>
+                <td>
+                    <a href="{% url 'add_cart' x.product.id x.size x.color %}">
+                        <button type="button" class="btn btn-sm btn-outline-dark me-3"><i class="fas fa-plus"></i></button></a>
+                     {{x.quantity}}
+                    <a href="{% url 'remove_cart' x.product.id x.size x.color %}">
+                        <button class="btn btn-sm btn-outline-dark ms-3"><i class="fas fa-minus"></i></button></a>
+                </td>
+                <td>$ {{x.sub_total}}</td>
+                <td><a href="{% url 'delete_cart' x.product.id x.size x.color %}"><button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash-alt"></i></button></a></td>
+            </tr>
             {% endfor %}
-            </tbody>
-        </table>
-    </section>
+           </table>
+        </div>
+    </div>
 
-    <section id="cart-add_1" class="section-p1">
-        <div id="subtotal">
-            <h3>Cart Totals</h3>
-            <table>
-                <tr>
-                    <td>Cart Subtotal</td>
-                    <td>$ {{ total }}</td>
-                </tr>
-                <tr>
-                    <td>Tax</td>
-                    <td>$ {{ tax }}</td>
-                </tr>
-                <!-- <tr>
-                    <td>Discout</td>
-                    <td>$ {{ discount }}</td>
-                </tr> -->
-                <tr>
-                    <td><strong>Total</strong></td>
-                    <td><strong>$ {{ grand_total }}</strong></td>
-                </tr>
-            </table>
-             <a href="{% url 'checkout' %}"><button>Proceed to checkout</button></a>
-             <p> {{ code }} </p>
-        </div>
-        <div id="coupon">
-            <h3>Apply Coupon</h3>
-            <form action="#" method="POST">
-                {% csrf_token %}
-                    {{ form.code }}
-                <button type="submit" name="coupon" >Apply</button>
+    <div class="container">
+        <div class="card" style="min-width: 300px;max-width: 30%;">
+            <h6 class="p-3"><i style="color:#fb8500 ;" class="fal fa-ticket"></i> Apply discount code</h6>
+            <form class="px-3" action="#" method="POST">
+                    {% csrf_token %}
+                        {{ form.code }}
+                    <button class="btn btn-sm" style="background-color:#6a994e ;color:azure" type="submit" name="coupon" >Apply</button>
             </form>
+            <hr>
+            <h5 class="px-3">Price Details</h3>
+            <table>
+                    <tr>
+                        <td class="px-3">Total Price</td>
+                        <td>$ {{ total }}</td>
+                    </tr>
+                    <tr>
+                        <td class="px-3">Estimated Tax</td>
+                        <td>$ {{ tax }}</td>
+                    </tr>
+                    <!-- <tr>
+                        <td>Discout</td>
+                        <td>$ {{ discount }}</td>
+                    </tr> -->
+                    <tr style="border-top: 1px dotted rgb(70, 69, 69);">
+                        <td class="p-3"><strong>Amount Payable</strong></td>
+                        <td style="font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;" >
+                            <strong>$ {{ grand_total }}</strong></td>
+                    </tr>
+            </table>
+            <hr>
+            <a href="{% url 'checkout' %}"><button class="btn btn-primary btn-sm mx-3">Proceed to checkout</button></a>
+            <p> {{ code }} </p>
         </div>
-    </section>
-<!--<h3>{{x.product.id}}</h3>-->
+    </div>
+
 
 {% endif %}
 
 
-    {% endblock %}
+
+
+
+{% endblock %}
 
 

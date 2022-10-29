@@ -38,10 +38,12 @@ def product_detail(request, category_slug, product_slug):
 def category_detail(request, category_slug):
     try:
         single_category = Product.objects.filter(category__slug=category_slug)
+        si_count = single_category.count()
     except Exception as e:
         raise e
     context = {
         'single_category': single_category,
+        'si_count': si_count,
     }
 
     return render(request, 'store.html', context)
@@ -56,7 +58,7 @@ def search(request):
             product = Product.objects.filter(Q(description__icontains=keyword) | Q(product_name__icontains=keyword))
             result_count = product.count()
     context = {
-        'product':product,
+        'search_products':product,
         'result_count': result_count,
     }
     return render(request, 'store.html', context)
