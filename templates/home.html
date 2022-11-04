@@ -2,20 +2,23 @@
 {% block content %}
 
 <!-- banner -->
-<img src="https://preview.colorlib.com/theme/cozastore/images/xslide-03.jpg.pagespeed.ic.tP-L47NU9M.webp" class="img-fluid px-5" alt="#">    
+<img src="https://preview.colorlib.com/theme/cozastore/images/xslide-03.jpg.pagespeed.ic.tP-L47NU9M.webp" class="img-fluid p-3" alt="#">    
 
 <!-- post -->
-<div class="container d-flex flex-column align-items-center ">
+<div class="container text-center d-flex flex-column align-items-center ">
   <h3 class="text-center pt-3 ">Featured Products</h3>
   <div class="row">
     {% for x in products %}
     <div class="col">
       <div class="card m-3" style="width: 13rem; height: auto;border-radius: 30px;">
-          <a href=""> <img src="{{ x.images.url }}" width="auto" class="card-img-top p-3" alt=""></a>
+          <a href="{{ x.get_url }}"> <img src="{{ x.images.url }}" width="auto" class="card-img-top p-3" alt=""></a>
           <div class="card-body">
             <h5 class="card-title m-1">{{ x.product_name }}</h5>
-            <p class="card-text m-1">$ {{x.price}}</p>
-            <a href="#" class="btn btn-sm btn-outline-primary">View details</a>
+            <p class="card-text m-1"style="font-size:x-large ; color: brown;">$ <strong>{{x.price}}</strong></p>
+            <div class="btn-group m-1" role="group" aria-label="Basic outlined example">
+              <a href="{{ x.get_url }}" class="btn btn-outline-secondary px-3"><i class="fas fa-eye"></i></a>
+              <a href="{% url 'add_fav' x.slug %}" class="btn btn-outline-secondary px-3"><i class="far fa-heart"></i></a>
+          </div>
           </div>
       </div>
     </div>

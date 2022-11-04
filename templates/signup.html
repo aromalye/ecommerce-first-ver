@@ -18,9 +18,7 @@
         <form action="#" method="POST" style="margin: 10px;">
           {% csrf_token %}
             <div class="form-outline mb-4">
-                {% for x in messages %}
-                <p style="color: red;"> *{{x}}</p>
-                {% endfor %}
+              {% include 'includes/alert.html' %}
                 <label class="form-label" for="form1Example1">User Name</label>
                 <input type="text" name="username" id="form1Example1" class="form-control" />
               </div>

@@ -4,15 +4,20 @@ from .models import Product, ProductColor, ProductSize
 from category.models import Category
 from django.http import HttpResponse
 from django.db.models import Q
+from django.core.paginator import Paginator
+from django.shortcuts import render
 # Create your views here.
 
 
 
 def store(request):
     product = Product.objects.all()
+    paginator = Paginator(product, 4)
+    page = request.GET.get('page')
+    paged_products = paginator.get_page(page)
 
     context = {
-        'product': product,
+        'product': paged_products,
     }
 
     return render(request, 'store.html', context)
@@ -39,10 +44,14 @@ def category_detail(request, category_slug):
     try:
         single_category = Product.objects.filter(category__slug=category_slug)
         si_count = single_category.count()
+        paginator = Paginator(single_category, 4)
+        page = request.GET.get('page')
+        paged_products = paginator.get_page(page)
+
     except Exception as e:
         raise e
     context = {
-        'single_category': single_category,
+        'single_category': paged_products,
         'si_count': si_count,
     }
 

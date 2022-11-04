@@ -27,10 +27,10 @@ def signup(request):
         password2 = request.POST['password2']
         if password == password2:
             if User.objects.filter(email=email).exists():
-                messages.info(request, 'Email Taken')
+                messages.error(request, 'Email Taken')
                 return redirect('signup')
             elif User.objects.filter(username=username).exists():
-                messages.info(request, 'Username Already Taken')
+                messages.error(request, 'Username Already Taken')
                 return redirect('signup')
             else:
                 user = User.objects.create_user(email=email, username=username, password=password)
@@ -58,7 +58,7 @@ def signup(request):
 
                 return redirect('account/signin/?command=verification&email='+to_email)
         else:
-            messages.info(request, 'Password Not Matching')
+            messages.error(request, 'Password Not Matching')
             return redirect('signup')
     else:
         return render(request, 'signup.html')
@@ -75,7 +75,7 @@ def signin(request):
             login(request, user)
             return redirect('/')
         else:
-            messages.info(request, 'Invalid Credentials')
+            messages.error(request, 'Invalid Credentials')
             return redirect('signin')
                   
     else:
@@ -110,15 +110,108 @@ def signout(request):
     return redirect('signin')
 
 
+def forgot_password(request):
+    if request.method == 'POST':
+        email = request.POST['email']
+        if User.objects.filter(email=email).exists():
+            user = User.objects.get(email__exact=email)
+
+            # password reset mail
+            current_site = get_current_site(request)
+            mail_subject = 'Reset Your Password'
+            message = render_to_string('reset_password_email.html', {
+                'user': user,
+                'domain': current_site,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': default_token_generator.make_token(user),
+            })
+            to_email = email
+            email = EmailMessage(
+                mail_subject, 
+                message, 
+                settings.EMAIL_HOST_USER,
+                to=[to_email],
+                )
+            email.fail_silently=False
+            email.send()
+
+            messages.info(request, 'Password reset email has been sent to your email address.')
+            return redirect('signin')
+        
+        else:
+            messages.error(request, 'Account does not exist!')
+            return redirect('forgot_password')
+
+    return render(request, 'forgot_password.html')
+
+
+def resetpassword_validate(request, uidb64, token):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = User._default_manager.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None and default_token_generator.check_token(user, token):
+        request.session['uid'] = uid
+        messages.success(request, 'Please reset your password')
+        return redirect('resetpassword')
+    else:
+        messages.error(request, 'This link has been expired!')
+        return redirect('signin')
+
+
+def resetpassword(request):
+    if request.method == 'POST':
+        password = request.POST['password']
+        confirm_password = request.POST['confirm_password']
+        if password == confirm_password:
+            uid = request.session.get('uid')
+            user = User.objects.get(pk=uid)
+            user.set_password(password)
+            user.save()
+            messages.success(request, 'Password reset successful')
+            return redirect('signin')
+        else:
+            messages.error(request, 'Password do not match')
+            return redirect('resetpassword')
+    else:
+        return render(request, 'resetpassword.html')
+
+
+
 def dashboard(request):
+    profile = Profile.objects.get(user=request.user)
     orders = Order.objects.order_by('-created_at').filter(user_id=request.user.id, is_ordered=True)
     order_count = orders.count()
 
     context = {
         'order_count': order_count,
+        'profile': profile,
     }
     return render(request, 'dashboard/dashboard.html', context)
 
+
+def edit_profile(request):
+    profile = Profile.objects.get(user=request.user)
+    if request.method == 'POST': 
+        
+        if request.FILES.get('profile_pic') == None:
+            image = profile.profileimg
+
+            profile.profileimg = image
+            profile.save()
+
+        if request.FILES.get('profile_pic') != None:
+            image = request.FILES.get('profile_pic')
+
+            profile.profileimg = image
+            profile.save()
+
+    context = {
+        'profile': profile
+    }
+    return render(request, 'dashboard/edit_profile.html', context)
+    
 
 def my_orders(request):
     orders = Order.objects.order_by('-created_at').filter(user_id=request.user.id, is_ordered=True)

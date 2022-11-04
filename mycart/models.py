@@ -13,6 +13,12 @@ class MyCart(models.Model):
         return self.cart_id
 
 
+class MyFav(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    Product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    size = models.CharField(max_length=100, blank=True)
+    color = models.CharField(max_length=100, blank=True)
+
 class MyCartItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)

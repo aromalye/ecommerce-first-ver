@@ -1,6 +1,7 @@
+from itertools import product
 from django.shortcuts import render, redirect, get_object_or_404
 from store.models import Product
-from . models import Coupons, MyCartItem
+from . models import Coupons, MyCartItem, MyFav
 from django.http import HttpResponse
 from django.utils.datastructures import MultiValueDictKeyError
 from django.contrib.auth.decorators import login_required
@@ -132,6 +133,8 @@ def checkout(request):
 
    
     cart_item = MyCartItem.objects.filter(user=request.user)
+    cart_count = cart_item.count()
+
     for x in cart_item:
         total += (x.product.price * x.quantity)
         dis_price = x.discount
@@ -141,11 +144,44 @@ def checkout(request):
     grand_total = total + tax - dis_price
     context = {
         'cart_item': cart_item,
+        'cart_count': cart_count,
         'total': total,
         'tax': tax,
         'grand_total': grand_total,
     }
 
     return render(request, 'checkout.html', context)
+
+
+def favourite(request):
+    fav = MyFav.objects.filter(user=request.user)
+    fav_count = fav.count()
+
+    context = {
+        'fav': fav,
+        'fav_count': fav_count,
+    }
+
+    return render(request, 'favourite.html', context)
+
+
+def add_fav(request, slug):
+    user = request.user
+    product = Product.objects.get(slug=slug)
+    fav = MyFav.objects.filter(user=user, Product__slug=slug).exists()
+    if fav == False:
+        fav = MyFav.objects.create(user=user, Product=product)
+        
+    return redirect('favourite')
+
+
+def remove_fav(request, slug):
+    user = request.user
+    fav = MyFav.objects.filter(user=user, Product__slug=slug)
+    fav.delete()
+    return redirect('favourite')
+
+
+
 
 

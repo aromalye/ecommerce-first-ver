@@ -23,6 +23,7 @@
     </div>
     {% else %}
     <div class="card m-5 p-3 mx-auto"style="max-width: 30%; min-width: 250px;; border: 2px solid seagreen;">
+          <h4>Sign in </h4>
         <form  action="#" method="POST" style="margin: 10px;">
           {% csrf_token %}
             <!-- <div class="form-outline mb-4">
@@ -30,15 +31,17 @@
                 <input type="text" id="form1Example1" class="form-control" />
               </div> -->
               <div class="form-outline mb-4">
-                {% for x in messages %}
+                {% include 'includes/alert.html' %}
+                <!-- {% for x in messages %}
                 <p style="color: red;"> *{{x}}</p>
-                {% endfor %}
-                <label class="form-label" for="form1Example1">Email address</label>
-                <input type="username" name="username" id="form1Example1" class="form-control" />
+                {% endfor %} -->
+                <label class="form-label" for="form1Example1">User Name</label>
+                <input type="text" name="username" id="form1Example1" class="form-control" />
               </div>
               <div class="form-outline mb-4">
                 <label class="form-label" for="form1Example2">Password</label>
                 <input type="password" name="password" id="form1Example2" class="form-control" />
+                <p class="text-end" >forgot password? <a href="{% url 'forgot_password' %}">get new</a></p>
               </div>
               <button type="submit" class="btn btn-success btn-sm m-1">Sign in</button>
               <p style="position: relative;top:25px">not a member? <a href="{% url 'signup' %}">sign up</a></p>

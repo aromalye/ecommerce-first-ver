@@ -37,23 +37,21 @@
 				</div>
 				<div class="card my-3">
 					<h5 class="card-header">Review Products</h5>
-					<div class="card-body">
-						<table class="table table-borderless table-shopping-cart">
-							<thead class="text-muted">
+					<div class="table-responsive">
+						<table class="table table-borderless">
                                 <tr>
-                                    <td style="width: 100px;">Image</td>
-                                    <td style="width: 300px;">Product</td>
-									<td style="width: 150px;">Variations</td>
-                                    <td style="width: 150px;">Price</td>
-                                    <td style="width: 150px;">Quantity</td>
-                                    <td>Subtotal</td>
+                                    <th style="width: 100px;">Image</th>
+                                    <th style="width: 300px;">Product</th>
+									<th style="width: 150px;">Variations</th>
+                                    <th style="width: 150px;">Price</th>
+                                    <th style="width: 150px;">Quantity</th>
+                                    <th>Subtotal</th>
                                 </tr>
-							</thead>
 							<tbody>
                                 {% for x in cart_items %}
                                     <tr>
-                                        <td><img src="{{ x.product.images.url }}" width="50px" ></td>
-                                        <td>{{x.product}}</td>
+                                        <td><a href="{{ x.product.get_url }}"><img src="{{ x.product.images.url }}" width="50px" ></a></td>
+                                        <td><a href="{{ x.product.get_url }}"style="text-decoration:none;color:#2a9d8f;">{{x.product}}</a></td>
 										<td style="font-size: small;" >size : {{ x.size }} <br> color : {{ x.color }}</td>
                                         <td>$ {{x.product.price}}</td>
                                         <td>{{x.quantity}}</td>

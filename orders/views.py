@@ -2,9 +2,11 @@ import json
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from mycart.models import MyCartItem
+from . forms import AddChoice
 from orders.models import Order, OrderProduct, Payment
 import datetime
 from django.core.mail import EmailMessage
+from django.conf import settings
 from django.template.loader import render_to_string
 from store.models import Product
 # Create your views here.
@@ -61,10 +63,17 @@ def payment(request):
     return JsonResponse(data)
 
 
+def delete_order(request, order_number):
+    order = Order.objects.get(order_number=order_number, user=request.user)
+    order.is_ordered = False
+    order.save()
+    return redirect('my_orders')
+
+
 def order_completed(request):
     order_number = request.GET.get('order_number')
     transID = request.GET.get('payment_id')
-
+    user = request.user
     try:
         order = Order.objects.get(order_number=order_number)
         ordered_poduct = OrderProduct.objects.filter(order_id=order.id)
@@ -74,6 +83,23 @@ def order_completed(request):
             total += x.product_price * x.quantity
         
         payment = Payment.objects.get(payment_id=transID)
+
+        # order placed mail
+        mail_subject = 'Your Order placed successfully'
+        message = render_to_string('order_recieved_email.html', {
+            'user': user,
+            'order': order,
+        })
+        to_email = order.email
+        print(to_email)
+        send_email = EmailMessage(
+            mail_subject, 
+            message,
+            settings.EMAIL_HOST_USER, 
+            to=[to_email],
+            )
+        send_email.fail_silently=False
+        send_email.send()
 
         context = {
             'order': order,
@@ -92,9 +118,6 @@ def order_completed(request):
 def place_order(request, total=0, quantity=0):
     user = request.user
     cart_items = MyCartItem.objects.filter(user=user)
-    cart_count = cart_items.count()
-    if cart_count < 1:
-        return redirect('store')
     
     grand_total = 0
     tax = 0

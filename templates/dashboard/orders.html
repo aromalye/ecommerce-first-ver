@@ -1,41 +1,42 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="row">
-    <aside class="col-md-3 px-5" style="margin-top: 60px;">
-        <ul class="list-group">
-          <a class="list-group-item " href="{% url 'dashboard' %}"> Dashboard </a>
-          <a class="list-group-item " href="#"> My Orders </a>
-          <a class="list-group-item " href="#"> Edit Profile </a>
-          <a class="list-group-item " href="#"> Change Password </a>
-        </ul>
-        <br>
-        <a class="btn btn-light btn-block" href="{% url 'logout' %}"> <i class="fa fa-power-off"></i> <span class="text">Log out</span> </a>
-    </aside>
-        <div class="col-md-8" style="padding: 60px; color: aquamarine;">
+    {% include 'includes/dashboard_sidebar.html' %}
+        <div class="col-md-8" style="padding: 60px 10px; color: aquamarine;">
             <ul class="list-group">
                 <p class="list-group-item"><span><strong>Your order history</strong></span>  
             </ul>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-12 table-responsive">
                         <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th scope="col">Order #</th>
-                                    <th scope="col">Billing name</th>
-                                    <th scope="col">Phone</th>
-                                    <th scope="col">Order total</th>
-                                    <th scope="col">Date</th>
+                                    <th style="min-width: 100px;">Order #</th>
+                                    <th style="min-width: 120px;">Billing name</th>
+                                    <th style="min-width: 100px;">Phone</th>
+                                    <th style="min-width: 100px;">Order total</th>
+                                    <th style="min-width: 150px;">Date</th>
+                                    <th style="min-width: 200px;">Order Status</th>
+
+
                                 </tr>
                             </thead>
                             {% for x in orders %}
                             <tbody>
                                 <tr>
-                                    <td>{{ x.order_number }}</td>
-                                    <td>{{ x.full_name }}</td>
-                                    <td>{{ x.phone }}</td>
-                                    <td>$ {{ x.order_total }}</td>
-                                    <td>{{ x.created_at }}</td>
+                                    <td style="font-size:small ;">{{ x.order_number }}</td>
+                                    <td style="font-size:small ;">{{ x.full_name }}</td>
+                                    <td style="font-size:small ;">{{ x.phone }}</td>
+                                    <td style="font-size:small ;">$ {{ x.order_total }}</td>
+                                    <td style="font-size:small ;">{{ x.created_at }}</td>
+                                    {% if x.status == 'New' %}
+                                    <td style="font-size:small ;">{{ x.status }} 
+                                        <a href="{% url 'delete_order' x.order_number %}" class="btn btn-outline-danger btn-sm mx-3"><i class="fas fa-trash"></i></a>  </td>
+                                    {% else %}
+                                    <td style="font-size:small ;">{{ x.status }}</td>
+                                    {% endif %}
+
                                 </tr>
                             </tbody>
                             {% endfor %}

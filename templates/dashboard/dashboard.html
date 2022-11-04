@@ -1,16 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="row">
-    <aside class="col-md-3 px-5" style="margin-top: 60px;">
-        <ul class="list-group">
-          <a class="list-group-item " href="#"> Dashboard </a>
-          <a class="list-group-item " href="{% url 'my_orders' %}"> My Orders </a>
-          <a class="list-group-item " href="#"> Edit Profile </a>
-          <a class="list-group-item " href="#"> Change Password </a>
-        </ul>
-        <br>
-        <a class="btn btn-light btn-block" href="{% url 'logout' %}"> <i class="fa fa-power-off"></i> <span class="text">Log out</span> </a>
-      </aside>
+  {% include 'includes/dashboard_sidebar.html' %}
 
     <div class="col-md-8" style="padding: 60px; color: rgb(37, 97, 77);">
         <ul class="list-group">
@@ -18,21 +9,22 @@
         </ul>
         <div class="card-body">
             <div class="row">
-               <div class="col-md-6">
+              
+               <div class="col-md-6 my-1">
                 <div class="card" style="width: 18rem;">
                     <div class="card-body text-center">
                       <h5 class="card-title">Total Orders</h5>
                       <p class="card-text">{{order_count}}</p>
-                      <a href="#" class="btn btn-primary btn-sm">View orders</a>
+                      <a href="{% url 'my_orders' %}" class="btn btn-primary btn-sm">View orders</a>
                     </div>
                 </div>
                </div>
-               <div class="col-md-6">
+               <div class="col-md-6 my-1">
                 <div class="card" style="width: 18rem;">
                     <div class="card-body text-center">
-                      <img src="https://www.w3schools.com/howto/img_avatar.png" alt="profile avatar" width="50px" style="border-radius: 50%;">
+                      <img style="max-width: 50px; border-radius:10px ;" src="{{ profile.profileimg.url }}" alt="profile avatar">
                       <p class="card-text my-0">{{ user.email }}</p>
-                      <p class="card-text">9075555</p>
+                      <!-- <p class="card-text"></p> -->
                     </div>
                 </div>
                </div>
