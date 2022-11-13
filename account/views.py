@@ -1,4 +1,3 @@
-from email import message
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
@@ -178,7 +177,7 @@ def resetpassword(request):
         return render(request, 'resetpassword.html')
 
 
-
+@login_required(login_url='signin')
 def dashboard(request):
     profile = Profile.objects.get(user=request.user)
     orders = Order.objects.order_by('-created_at').filter(user_id=request.user.id, is_ordered=True)
@@ -211,10 +210,11 @@ def edit_profile(request):
         'profile': profile
     }
     return render(request, 'dashboard/edit_profile.html', context)
-    
 
+
+@login_required(login_url='signin')
 def my_orders(request):
-    orders = Order.objects.order_by('-created_at').filter(user_id=request.user.id, is_ordered=True)
+    orders = Order.objects.order_by('-created_at').filter(user=request.user, is_ordered=True)
 
     context = {
         'orders': orders

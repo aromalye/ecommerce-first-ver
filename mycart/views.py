@@ -153,18 +153,22 @@ def checkout(request):
     return render(request, 'checkout.html', context)
 
 
+@login_required(login_url='signin')
 def favourite(request):
-    fav = MyFav.objects.filter(user=request.user)
-    fav_count = fav.count()
+    if request.user.id is not None:
+        fav = MyFav.objects.filter(user=request.user)
+        fav_count = fav.count()
 
-    context = {
-        'fav': fav,
-        'fav_count': fav_count,
-    }
+        context = {
+            'fav': fav,
+            'fav_count': fav_count,
+        }
+        return render(request, 'favourite.html', context)
+    else:
+        return render(request, 'favourite.html')
 
-    return render(request, 'favourite.html', context)
 
-
+@login_required(login_url='signin')
 def add_fav(request, slug):
     user = request.user
     product = Product.objects.get(slug=slug)

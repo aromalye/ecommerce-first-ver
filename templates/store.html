@@ -17,12 +17,20 @@
         {% if 'keyword' in request.GET %}
         {% for x in search_products %}
         <div class="col">
-          <div class="card m-3" style="width: 13rem; height: auto;border-radius: 30px;">
-              {% if x.stock < 1 %}
-              <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"> <img src="{{ x.images.url }}" width="auto" class="card-img-top p-3" alt=""></a>
-              {% else %}
-              <a href="{{ x.get_url }}"> <img src="{{ x.images.url }}" width="auto" class="card-img-top p-3" alt=""></a>
-              {% endif %}
+          <div class="card m-3" style="width: 13rem; height: 350px;border-radius: 30px;">
+            {% if x.stock < 1 %}
+            <div style="max-height: 180px;min-width: 200px;">
+              <a href="#"data-bs-toggle="modal" data-bs-target="#exampleModal"> 
+                <img src="{{ x.images.url }}" style="width:80%" class="card-img-top p-3" alt="">
+              </a>
+            </div>
+          {% else %}
+            <div style="max-height: 180px;min-width: 200px;">
+              <a href="{{ x.get_url }}"> 
+                <img src="{{ x.images.url }}" style="width:80%" class="card-img-top p-3" alt="">
+              </a>
+            </div>
+          {% endif %}
               <div class="card-body">
                 <h5 class="card-title">{{ x.product_name }}</h5>
                 <p class="card-text m-1" style="font-size:x-large ; color: brown;">$ <strong>{{x.price}}</strong></p>
@@ -43,11 +51,19 @@
 
         {% for x in product %}
         <div class="col">
-          <div class="card m-3" style="width: 13rem; height: auto;border-radius: 30px;">
+          <div class="card m-3" style="max-width: 13rem; height: 350px;border-radius: 30px;">
               {% if x.stock < 1 %}
-              <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"> <img src="{{ x.images.url }}" width="auto" class="card-img-top p-3" alt=""></a>
+                <div style="max-height: 180px;min-width: 200px;">
+                  <a href="{{ x.get_url }}"> 
+                    <img src="{{ x.images.url }}" style="width:80%" class="card-img-top p-3" alt="">
+                  </a>
+                </div>
               {% else %}
-              <a href="{{ x.get_url }}"> <img src="{{ x.images.url }}" width="auto" class="card-img-top p-3" alt=""></a>
+                <div style="max-height: 180px;min-width: 200px;">
+                  <a href="{{ x.get_url }}"> 
+                    <img src="{{ x.images.url }}" style="width:80%" class="card-img-top p-3" alt="">
+                  </a>
+                </div>
               {% endif %}
               <div class="card-body">
                 <h5 class="card-title">{{ x.product_name }}</h5>
@@ -67,11 +83,19 @@
 
         {% for x in single_category %}
         <div class="col">
-          <div class="card m-3" style="width: 13rem; height: auto;border-radius: 30px;">
-              {% if x.stock < 1 %}
-              <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"> <img src="{{ x.images.url }}" width="auto" class="card-img-top p-3" alt=""></a>
+          <div class="card m-3" style="width: 13rem; height: 350px;border-radius: 30px;">
+            {% if x.stock < 1 %}
+                <div style="max-height: 180px;min-width: 200px;">
+                  <a href="#"data-bs-toggle="modal" data-bs-target="#exampleModal"> 
+                    <img src="{{ x.images.url }}" style="width:80%" class="card-img-top p-3" alt="">
+                  </a>
+                </div>
               {% else %}
-              <a href="{{ x.get_url }}"> <img src="{{ x.images.url }}" width="auto" class="card-img-top p-3" alt=""></a>
+                <div style="max-height: 180px;min-width: 200px;">
+                  <a href="{{ x.get_url }}"> 
+                    <img src="{{ x.images.url }}" style="width:80%" class="card-img-top p-3" alt="">
+                  </a>
+                </div>
               {% endif %}
               <div class="card-body">
                 <h5 class="card-title">{{ x.product_name }}</h5>
